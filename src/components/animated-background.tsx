@@ -13,6 +13,20 @@ import { useRouter } from "next/navigation";
 
 gsap.registerPlugin(ScrollTrigger);
 
+// --- ADDED MAPPINGS HERE ---
+// 1. Map Spline Object Names -> Your New Code Names (for clicks/hovers)
+const SPLINE_TO_SKILL_MAP: Record<string, string> = {
+  "postgres": "mysql",
+  "linux": "java"
+};
+
+// 2. Map Your New Code Names -> Spline Object Names (for animations)
+const SKILL_TO_SPLINE_MAP: Record<string, string> = {
+  "mysql": "postgres",
+  "java": "linux"
+};
+// ---------------------------
+
 const STATES = {
   hero: {
     desktop: {
@@ -133,7 +147,10 @@ const AnimatedBackground = () => {
   };
 
   const handleMouseHover = (e: SplineEvent) => {
-    if (!splineApp || selectedSkill?.name === e.target.name) return;
+    // FIX 1: Map the object name if it exists in our map, otherwise use original
+    const targetName = SPLINE_TO_SKILL_MAP[e.target.name] || e.target.name;
+
+    if (!splineApp || selectedSkill?.name === targetName) return;
 
     if (e.target.name === "body" || e.target.name === "platform") {
       setSelectedSkill(null);
@@ -142,9 +159,11 @@ const AnimatedBackground = () => {
         splineApp.setVariable("desc", "");
       }
     } else {
-      if (!selectedSkill || selectedSkill.name !== e.target.name) {
-        const skill = SKILLS[e.target.name as SkillNames];
-        setSelectedSkill(skill);
+      if (!selectedSkill || selectedSkill.name !== targetName) {
+        const skill = SKILLS[targetName as SkillNames];
+        if (skill) {
+          setSelectedSkill(skill);
+        }
       }
     }
   };
@@ -351,10 +370,15 @@ const AnimatedBackground = () => {
     });
     splineApp.addEventListener("keyDown", (e) => {
       if (!splineApp) return;
-      const skill = SKILLS[e.target.name as SkillNames];
+      // FIX 2: Map the Spline event name to our Skill name
+      const targetName = SPLINE_TO_SKILL_MAP[e.target.name] || e.target.name;
+      const skill = SKILLS[targetName as SkillNames];
+      
       if (skill) setSelectedSkill(skill);
-      splineApp.setVariable("heading", skill.label);
-      splineApp.setVariable("desc", skill.shortDescription);
+      if (skill) { // Add safety check
+        splineApp.setVariable("heading", skill.label);
+        splineApp.setVariable("desc", skill.shortDescription);
+      }
     });
     splineApp.addEventListener("mouseHover", handleMouseHover);
   };
@@ -525,7 +549,10 @@ const AnimatedBackground = () => {
       Object.values(SKILLS)
         .sort(() => Math.random() - 0.5)
         .forEach((skill, idx) => {
-          const keycap = splineApp.findObjectByName(skill.name);
+          // FIX 3: Map the Skill name back to Spline name to find the object
+          const objectName = SKILL_TO_SPLINE_MAP[skill.name] || skill.name;
+          const keycap = splineApp.findObjectByName(objectName);
+          
           if (!keycap) return;
           const t = gsap.to(keycap?.position, {
             y: Math.random() * 200 + 200,
@@ -542,7 +569,10 @@ const AnimatedBackground = () => {
     const stop = () => {
       removePrevTweens();
       Object.values(SKILLS).forEach((skill) => {
-        const keycap = splineApp.findObjectByName(skill.name);
+        // FIX 4: Map here as well
+        const objectName = SKILL_TO_SPLINE_MAP[skill.name] || skill.name;
+        const keycap = splineApp.findObjectByName(objectName);
+        
         if (!keycap) return;
         const t = gsap.to(keycap?.position, {
           y: 0,
@@ -568,7 +598,7 @@ const AnimatedBackground = () => {
             setSplineApp(app);
             bypassLoading();
           }}
-          scene="/assets/skills-keyboard.spline"
+          scene="/assets/keyboard.spline"
         />
       </Suspense>
     </>

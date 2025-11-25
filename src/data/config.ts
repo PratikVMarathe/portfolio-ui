@@ -7,7 +7,10 @@ const config = {
   },
   keywords: [
     "Pratik",
+    "Marathe",
+    "Pratik Marathe",
     "portfolio",
+    "Software Developer",
     "full-stack developer",
     "creative technologist",
     "web development",
@@ -27,6 +30,7 @@ const config = {
   email: "pratikmarathe2108@gmail.com",
   site: "https://nareshkhatri.site",
   heroName: "The Alchemist Coder",
+  favicon: "/assets/favicon.png",
 
   get ogImg() {
     return this.site + "/assets/seo/og-image.png";
