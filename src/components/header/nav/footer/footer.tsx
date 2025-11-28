@@ -49,7 +49,7 @@ export default function Footer() {
         >
           Blog
         </motion.li>
-        <motion.li
+        {/* <motion.li
           custom={[0.3, 0]}
           variants={translate}
           initial="initial"
@@ -57,7 +57,7 @@ export default function Footer() {
           exit="exit"
         >
           Newsletter
-        </motion.li>
+        </motion.li> */}
       </ul>
     </div>
   );

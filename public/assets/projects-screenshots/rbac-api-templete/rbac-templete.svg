@@ -1,0 +1,69 @@
+<svg width="800" height="600" viewBox="0 0 800 600" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="800" height="600" rx="12" fill="#18181B"/>
+  
+  <rect width="800" height="40" rx="12" fill="#27272A"/>
+  <rect x="0" y="30" width="800" height="10" fill="#27272A"/>
+  <circle cx="30" cy="20" r="6" fill="#EF4444"/>
+  <circle cx="55" cy="20" r="6" fill="#EAB308"/>
+  <circle cx="80" cy="20" r="6" fill="#22C55E"/>
+  <text x="400" y="25" text-anchor="middle" fill="#71717A" font-family="sans-serif" font-size="14">RBAC Security Flow</text>
+
+  <g transform="translate(50, 80)">
+    
+    <text x="80" y="30" text-anchor="middle" fill="#60A5FA" font-family="sans-serif" font-size="16" font-weight="bold">Client</text>
+    <rect x="10" y="50" width="140" height="60" rx="8" fill="#27272A" stroke="#3B82F6" stroke-width="2"/>
+    <text x="80" y="85" text-anchor="middle" fill="#E4E4E7" font-family="sans-serif">HTTP Request</text>
+
+    <path d="M150 80 H 200" stroke="#52525B" stroke-width="2" stroke-dasharray="4 4"/>
+    <polygon points="205,80 195,75 195,85" fill="#52525B"/>
+
+    <text x="350" y="30" text-anchor="middle" fill="#A78BFA" font-family="sans-serif" font-size="16" font-weight="bold">Spring Security</text>
+    <rect x="200" y="50" width="300" height="280" rx="12" fill="#27272A" stroke="#A78BFA" stroke-width="2"/>
+    
+    <rect x="230" y="80" width="240" height="50" rx="6" fill="#4C1D95"/>
+    <text x="350" y="110" text-anchor="middle" fill="#E4E4E7" font-family="sans-serif" font-weight="bold">Authentication Filter</text>
+    <text x="350" y="125" text-anchor="middle" fill="#C4B5FD" font-family="sans-serif" font-size="10">(Who are you?)</text>
+
+    <path d="M350 130 V 150" stroke="#A78BFA" stroke-width="2"/>
+
+    <rect x="230" y="150" width="240" height="50" rx="6" fill="#5B21B6"/>
+    <text x="350" y="180" text-anchor="middle" fill="#E4E4E7" font-family="sans-serif" font-weight="bold">Authorization Manager</text>
+    <text x="350" y="195" text-anchor="middle" fill="#C4B5FD" font-family="sans-serif" font-size="10">(What roles do you have?)</text>
+
+    <path d="M350 200 V 230" stroke="#A78BFA" stroke-width="2"/>
+
+    <rect x="230" y="230" width="240" height="80" rx="6" fill="#27272A" stroke="#A78BFA" stroke-dasharray="4 4"/>
+    <text x="350" y="255" text-anchor="middle" fill="#E4E4E7" font-family="sans-serif" font-size="12">RBAC Logic</text>
+    <rect x="245" y="270" width="60" height="25" rx="4" fill="#A78BFA"/><text x="275" y="287" text-anchor="middle" fill="#18181B" font-size="10" font-weight="bold">ADMIN</text>
+    <rect x="320" y="270" width="60" height="25" rx="4" fill="#A78BFA"/><text x="350" y="287" text-anchor="middle" fill="#18181B" font-size="10" font-weight="bold">USER</text>
+    <rect x="395" y="270" width="60" height="25" rx="4" fill="#A78BFA"/><text x="425" y="287" text-anchor="middle" fill="#18181B" font-size="10" font-weight="bold">MOD</text>
+
+    <path d="M500 190 H 550" stroke="#52525B" stroke-width="2" stroke-dasharray="4 4"/>
+    <polygon points="555,190 545,185 545,195" fill="#52525B"/>
+
+    <text x="630" y="130" text-anchor="middle" fill="#22C55E" font-family="sans-serif" font-size="16" font-weight="bold">API Resources</text>
+    
+    <rect x="550" y="150" width="160" height="40" rx="4" fill="#27272A" stroke="#22C55E"/>
+    <text x="630" y="175" text-anchor="middle" fill="#E4E4E7" font-family="sans-serif" font-size="12">/api/admin/** 🔒</text>
+    
+    <rect x="550" y="200" width="160" height="40" rx="4" fill="#27272A" stroke="#22C55E"/>
+    <text x="630" y="225" text-anchor="middle" fill="#E4E4E7" font-family="sans-serif" font-size="12">/api/user/** 🔓</text>
+
+    <text x="350" y="380" text-anchor="middle" fill="#F59E0B" font-family="sans-serif" font-size="16" font-weight="bold">Database Schema</text>
+    <path d="M150 400 H 550 V 460 H 150 Z" fill="#27272A" stroke="#F59E0B" stroke-width="1"/>
+    
+    <rect x="180" y="415" width="80" height="30" rx="4" fill="#3F3F46"/>
+    <text x="220" y="435" text-anchor="middle" fill="#E4E4E7" font-size="12">User</text>
+    
+    <line x1="260" y1="430" x2="310" y2="430" stroke="#71717A" stroke-width="2"/>
+    
+    <rect x="310" y="415" width="80" height="30" rx="4" fill="#3F3F46"/>
+    <text x="350" y="435" text-anchor="middle" fill="#E4E4E7" font-size="12">Role</text>
+
+    <line x1="390" y1="430" x2="440" y2="430" stroke="#71717A" stroke-width="2"/>
+
+    <rect x="440" y="415" width="80" height="30" rx="4" fill="#3F3F46"/>
+    <text x="480" y="435" text-anchor="middle" fill="#E4E4E7" font-size="12">Privilege</text>
+
+  </g>
+</svg>

@@ -1,0 +1,47 @@
+<svg width="800" height="600" viewBox="0 0 800 600" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="800" height="600" rx="12" fill="#202124"/> <rect width="800" height="40" rx="12" fill="#2D2E30"/>
+  <rect x="0" y="30" width="800" height="10" fill="#2D2E30"/>
+  <circle cx="30" cy="20" r="6" fill="#EF4444"/>
+  <circle cx="55" cy="20" r="6" fill="#EAB308"/>
+  <circle cx="80" cy="20" r="6" fill="#22C55E"/>
+  <text x="400" y="25" text-anchor="middle" fill="#9AA0A6" font-family="sans-serif" font-size="14">Keeper - Note Taking App</text>
+
+  <rect x="0" y="40" width="800" height="60" fill="#202124" stroke="#5F6368" stroke-width="1"/>
+  <text x="50" y="77" fill="#E8EAED" font-family="sans-serif" font-size="22" font-weight="bold">Keeper</text>
+  <circle cx="30" cy="70" r="8" fill="#FCCB00"/> 
+  <line x1="0" y1="100" x2="800" y2="100" stroke="#5F6368" stroke-width="1"/>
+
+  <g transform="translate(50, 130)">
+    
+    <rect x="150" y="0" width="400" height="45" rx="8" fill="#202124" stroke="#5F6368" stroke-width="1"/>
+    <text x="170" y="28" fill="#9AA0A6" font-family="sans-serif" font-size="14">Take a note...</text>
+    <text x="510" y="28" fill="#9AA0A6" font-family="sans-serif" font-size="18">+</text>
+
+    <g transform="translate(0, 80)">
+      
+      <rect x="0" y="0" width="220" height="140" rx="8" fill="#202124" stroke="#5F6368"/>
+      <text x="15" y="30" fill="#E8EAED" font-family="sans-serif" font-size="14" font-weight="bold">Project Ideas 🚀</text>
+      <text x="15" y="55" fill="#9AA0A6" font-family="sans-serif" font-size="12">1. Portfolio Website</text>
+      <text x="15" y="75" fill="#9AA0A6" font-family="sans-serif" font-size="12">2. Keeper App</text>
+      <text x="15" y="95" fill="#9AA0A6" font-family="sans-serif" font-size="12">3. Weather API</text>
+      
+      <rect x="240" y="0" width="220" height="100" rx="8" fill="#202124" stroke="#5F6368"/>
+      <text x="255" y="30" fill="#E8EAED" font-family="sans-serif" font-size="14" font-weight="bold">Groceries 🍎</text>
+      <text x="255" y="55" fill="#9AA0A6" font-family="sans-serif" font-size="12">Milk, Eggs, Bread</text>
+      <text x="255" y="75" fill="#9AA0A6" font-family="sans-serif" font-size="12">Coffee beans!!</text>
+
+      <rect x="480" y="0" width="220" height="160" rx="8" fill="#202124" stroke="#5F6368"/>
+      <text x="495" y="30" fill="#E8EAED" font-family="sans-serif" font-size="14" font-weight="bold">React Hooks</text>
+      <text x="495" y="55" fill="#9AA0A6" font-family="sans-serif" font-size="12">useState</text>
+      <text x="495" y="75" fill="#9AA0A6" font-family="sans-serif" font-size="12">useEffect</text>
+      <text x="495" y="95" fill="#9AA0A6" font-family="sans-serif" font-size="12">useContext</text>
+      <text x="495" y="115" fill="#9AA0A6" font-family="sans-serif" font-size="12">useReducer</text>
+
+      <rect x="240" y="120" width="220" height="120" rx="8" fill="#202124" stroke="#5F6368"/>
+      <text x="255" y="150" fill="#E8EAED" font-family="sans-serif" font-size="14" font-weight="bold">Meeting at 5pm</text>
+      <text x="255" y="175" fill="#9AA0A6" font-family="sans-serif" font-size="12">Discuss Q4 roadmap</text>
+      <text x="255" y="195" fill="#9AA0A6" font-family="sans-serif" font-size="12">Prepare slides</text>
+
+    </g>
+  </g>
+</svg>

@@ -22,10 +22,12 @@ const ContactForm = () => {
     e.preventDefault();
     setLoading(true);
     try {
-      const res = await fetch("/api/send", {
+      // 1. Updated URL to your Formspree endpoint
+      const res = await fetch("https://formspree.io/f/mvoenqgg", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          "Accept": "application/json" // 2. Critical: Tells Formspree to return JSON, not a redirect
         },
         body: JSON.stringify({
           fullName,
@@ -33,23 +35,33 @@ const ContactForm = () => {
           message,
         }),
       });
+
       const data = await res.json();
-      if (data.error) throw new Error(data.error);
+
+      // 3. Formspree returns "ok: true" on success, or an array of errors
+      if (!res.ok || (data.errors && data.errors.length > 0)) {
+        throw new Error(data.error || "Failed to send message");
+      }
+
       toast({
         title: "Thank you!",
         description: "I'll get back to you as soon as possible.",
         variant: "default",
         className: cn("top-0 mx-auto flex fixed md:top-4 md:right-4"),
       });
+      
       setLoading(false);
       setFullName("");
       setEmail("");
       setMessage("");
+      
       const timer = setTimeout(() => {
         router.push("/");
         clearTimeout(timer);
       }, 1000);
+
     } catch (err) {
+      console.error(err); // Good for debugging
       toast({
         title: "Error",
         description: "Something went wrong! Please check the fields.",

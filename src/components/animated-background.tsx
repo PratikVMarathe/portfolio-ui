@@ -80,6 +80,26 @@ const STATES = {
       },
     },
   },
+  experience: { // NEW STATE
+    desktop: {
+      scale: { x: 0.35, y: 0.35, z: 0.35 },
+      position: { x: 300, y: -40, z: 0 }, // Shifted right to make room for text on left
+      rotation: {
+        x: 0,
+        y: -Math.PI / 8, // Tilted slightly opposite to skills
+        z: 0,
+      },
+    },
+    mobile: {
+      scale: { x: 0.2, y: 0.2, z: 0.2 },
+      position: { x: 0, y: -40, z: 0 },
+      rotation: {
+        x: 0,
+        y: -Math.PI / 6,
+        z: 0,
+      },
+    },
+  },
   projects: {
     desktop: {
       scale: { x: 0.3, y: 0.3, z: 0.3 },
@@ -122,9 +142,10 @@ const STATES = {
   },
 };
 
-type Section = "hero" | "about" | "skills" | "projects" | "contact";
+type Section = "hero" | "about" | "skills" | "experience" | "projects" | "contact";
 
 const AnimatedBackground = () => {
+  // const experienceFloatRef = useRef<gsap.core.Tween | null>(null);
   const { isLoading, bypassLoading } = usePreloader();
   const { theme } = useTheme();
   const isMobile = useMediaQuery("(max-width: 768px)");
@@ -234,6 +255,8 @@ const AnimatedBackground = () => {
       if (!splineApp) return;
       const kbd: SPEObject | undefined = splineApp.findObjectByName("keyboard");
       if (!kbd) return;
+
+      // 1. Define Animations
       rotateKeyboard = gsap.to(kbd.rotation, {
         y: Math.PI * 2 + kbd.rotation.y,
         duration: 10,
@@ -243,40 +266,50 @@ const AnimatedBackground = () => {
         ease: "back.inOut",
         delay: 2.5,
       });
+
       teardownKeyboard = gsap.fromTo(
         kbd.rotation,
-        {
-          y: 0,
-          // x: -Math.PI,
-          x: -Math.PI,
-          z: 0,
-        },
+        { y: 0, x: -Math.PI, z: 0 },
         {
           y: -Math.PI / 2,
           duration: 5,
           repeat: -1,
           yoyo: true,
           yoyoEase: true,
-          // ease: "none",
           delay: 2.5,
           immediateRender: false,
           paused: true,
         }
       );
+
+      // 2. Handle Section-Specific Logic
+      
+      // HERO: Spin the keyboard
       if (activeSection === "hero") {
         rotateKeyboard.restart();
         teardownKeyboard.pause();
-      } else if (activeSection === "contact") {
+      } 
+      // CONTACT: Explode the keys
+      else if (activeSection === "contact") {
         rotateKeyboard.pause();
-      } else {
+        await sleep(600);
+        teardownKeyboard.restart();
+        keycapAnimtations?.start();
+      } 
+      // OTHERS (About, Skills, Experience, Projects): Stop Spin & Explode
+      else {
         rotateKeyboard.pause();
         teardownKeyboard.pause();
+        keycapAnimtations?.stop();
       }
-      if (activeSection === "skills") {
-      } else {
+
+      // SKILLS: Handle Text Visibility
+      if (activeSection !== "skills") {
         splineApp.setVariable("heading", "");
         splineApp.setVariable("desc", "");
       }
+
+      // PROJECTS: Bongo Cat
       if (activeSection === "projects") {
         await sleep(300);
         bongoAnimation?.start();
@@ -284,21 +317,14 @@ const AnimatedBackground = () => {
         await sleep(200);
         bongoAnimation?.stop();
       }
-      if (activeSection === "contact") {
-        await sleep(600);
-        teardownKeyboard.restart();
-        keycapAnimtations?.start();
-      } else {
-        await sleep(600);
-        teardownKeyboard.pause();
-        keycapAnimtations?.stop();
-      }
+
     })();
+
     return () => {
       if (rotateKeyboard) rotateKeyboard.kill();
       if (teardownKeyboard) teardownKeyboard.kill();
     };
-  }, [activeSection, splineApp]);
+  }, [activeSection, splineApp, bongoAnimation, keycapAnimtations]); // <--- Dependencies Updated
 
   const [keyboardRevealed, setKeyboardRevealed] = useState(false);
   const router = useRouter();
@@ -386,126 +412,138 @@ const AnimatedBackground = () => {
     if (!splineApp) return;
     const kbd: SPEObject | undefined = splineApp.findObjectByName("keyboard");
     if (!kbd || !splineContainer.current) return;
-    gsap.set(kbd.scale, {
-      ...keyboardStates("hero").scale,
+    
+    // Set initial Hero state
+    gsap.set(kbd.scale, { ...keyboardStates("hero").scale });
+    gsap.set(kbd.position, { ...keyboardStates("hero").position });
+
+    // Define float tween variable for Experience section
+    let experienceFloatTween: gsap.core.Tween | null = null;
+
+    // --- 1. ABOUT SECTION (New) ---
+    gsap.timeline({
+      scrollTrigger: {
+        trigger: "#about",
+        start: "top 60%",
+        end: "bottom bottom",
+        scrub: true,
+        onEnter: () => {
+          setActiveSection("about");
+          gsap.to(kbd.scale, { ...keyboardStates("about").scale, duration: 1 });
+          gsap.to(kbd.position, { ...keyboardStates("about").position, duration: 1 });
+          gsap.to(kbd.rotation, { ...keyboardStates("about").rotation, duration: 1 });
+        },
+        onLeaveBack: () => {
+          setActiveSection("hero");
+          gsap.to(kbd.scale, { ...keyboardStates("hero").scale, duration: 1 });
+          gsap.to(kbd.position, { ...keyboardStates("hero").position, duration: 1 });
+          gsap.to(kbd.rotation, { ...keyboardStates("hero").rotation, duration: 1 });
+        },
+      },
     });
-    gsap.set(kbd.position, {
-      ...keyboardStates("hero").position,
-    });
+
+    // --- 2. SKILLS SECTION (Updated) ---
     gsap.timeline({
       scrollTrigger: {
         trigger: "#skills",
         start: "top 50%",
         end: "bottom bottom",
         scrub: true,
-        // markers: true,
         onEnter: () => {
           setActiveSection("skills");
-          gsap.to(kbd.scale, {
-            ...keyboardStates("skills").scale,
-            duration: 1,
-          });
-          gsap.to(kbd.position, {
-            ...keyboardStates("skills").position,
-            duration: 1,
-          });
-          gsap.to(kbd.rotation, {
-            ...keyboardStates("skills").rotation,
-            duration: 1,
-          });
+          gsap.to(kbd.scale, { ...keyboardStates("skills").scale, duration: 1 });
+          gsap.to(kbd.position, { ...keyboardStates("skills").position, duration: 1 });
+          gsap.to(kbd.rotation, { ...keyboardStates("skills").rotation, duration: 1 });
         },
         onLeaveBack: () => {
-          setActiveSection("hero");
-          gsap.to(kbd.scale, { ...keyboardStates("hero").scale, duration: 1 });
-          gsap.to(kbd.position, {
-            ...keyboardStates("hero").position,
-            duration: 1,
-          });
-          gsap.to(kbd.rotation, {
-            ...keyboardStates("hero").rotation,
-            duration: 1,
-          });
-          // gsap.to(kbd.rotation, { x: 0, duration: 1 });
+          // FIX: Go back to ABOUT, not Hero
+          setActiveSection("about");
+          gsap.to(kbd.scale, { ...keyboardStates("about").scale, duration: 1 });
+          gsap.to(kbd.position, { ...keyboardStates("about").position, duration: 1 });
+          gsap.to(kbd.rotation, { ...keyboardStates("about").rotation, duration: 1 });
         },
       },
     });
+
+    // --- 3. EXPERIENCE SECTION ---
+    gsap.timeline({
+      scrollTrigger: {
+        trigger: "#experience",
+        start: "top 60%", 
+        end: "bottom bottom",
+        scrub: true,
+        onEnter: () => {
+          setActiveSection("experience");
+          
+          gsap.to(kbd.scale, { ...keyboardStates("experience").scale, duration: 1 });
+          gsap.to(kbd.position, { ...keyboardStates("experience").position, duration: 1 });
+          gsap.to(kbd.rotation, { ...keyboardStates("experience").rotation, duration: 1 });
+
+          // Start Floating Effect
+          if (experienceFloatTween) experienceFloatTween.kill();
+          experienceFloatTween = gsap.to(kbd.position, {
+            y: "+=15",
+            duration: 2.5,
+            repeat: -1,
+            yoyo: true,
+            ease: "sine.inOut",
+            delay: 1 
+          });
+        },
+        onLeave: () => {
+           if (experienceFloatTween) experienceFloatTween.kill();
+        },
+        onLeaveBack: () => {
+          setActiveSection("skills");
+          if (experienceFloatTween) experienceFloatTween.kill();
+
+          gsap.to(kbd.scale, { ...keyboardStates("skills").scale, duration: 1 });
+          gsap.to(kbd.position, { ...keyboardStates("skills").position, duration: 1 });
+          gsap.to(kbd.rotation, { ...keyboardStates("skills").rotation, duration: 1 });
+        },
+      },
+    });
+
+    // --- 4. PROJECTS SECTION ---
     gsap.timeline({
       scrollTrigger: {
         trigger: "#projects",
         start: "top 70%",
         end: "bottom bottom",
         scrub: true,
-        // markers: true,
         onEnter: () => {
           setActiveSection("projects");
-          gsap.to(kbd.scale, {
-            ...keyboardStates("projects").scale,
-            duration: 1,
-          });
-          gsap.to(kbd.position, {
-            ...keyboardStates("projects").position,
-            duration: 1,
-          });
-          gsap.to(kbd.rotation, {
-            ...keyboardStates("projects").rotation,
-            duration: 1,
-          });
+          gsap.to(kbd.scale, { ...keyboardStates("projects").scale, duration: 1 });
+          gsap.to(kbd.position, { ...keyboardStates("projects").position, duration: 1 });
+          gsap.to(kbd.rotation, { ...keyboardStates("projects").rotation, duration: 1 });
         },
         onLeaveBack: () => {
-          setActiveSection("skills");
-          gsap.to(kbd.scale, {
-            ...keyboardStates("skills").scale,
-            duration: 1,
-          });
-          gsap.to(kbd.position, {
-            ...keyboardStates("skills").position,
-            duration: 1,
-          });
-          gsap.to(kbd.rotation, {
-            ...keyboardStates("skills").rotation,
-            duration: 1,
-          });
-          // gsap.to(kbd.rotation, { x: 0, duration: 1 });
+          setActiveSection("experience"); 
+          gsap.to(kbd.scale, { ...keyboardStates("experience").scale, duration: 1 });
+          gsap.to(kbd.position, { ...keyboardStates("experience").position, duration: 1 });
+          gsap.to(kbd.rotation, { ...keyboardStates("experience").rotation, duration: 1 });
         },
       },
     });
+
+    // --- 5. CONTACT SECTION ---
     gsap.timeline({
       scrollTrigger: {
         trigger: "#contact",
         start: "top 30%",
         end: "bottom bottom",
         scrub: true,
-        // markers: true,
         onEnter: () => {
           setActiveSection("contact");
-          gsap.to(kbd.scale, {
-            ...keyboardStates("contact").scale,
-            duration: 1,
-          });
-          gsap.to(kbd.position, {
-            ...keyboardStates("contact").position,
-            duration: 1,
-          });
-          gsap.to(kbd.rotation, {
-            ...keyboardStates("contact").rotation,
-            duration: 1,
-          });
+          gsap.to(kbd.scale, { ...keyboardStates("contact").scale, duration: 1 });
+          gsap.to(kbd.position, { ...keyboardStates("contact").position, duration: 1 });
+          gsap.to(kbd.rotation, { ...keyboardStates("contact").rotation, duration: 1 });
         },
         onLeaveBack: () => {
           setActiveSection("projects");
-          gsap.to(kbd.scale, {
-            ...keyboardStates("projects").scale,
-            duration: 1,
-          });
-          gsap.to(kbd.position, {
-            ...keyboardStates("projects").position,
-            duration: 1,
-          });
-          gsap.to(kbd.rotation, {
-            ...keyboardStates("projects").rotation,
-            duration: 1,
-          });
-          // gsap.to(kbd.rotation, { x: 0, duration: 1 });
+          gsap.to(kbd.scale, { ...keyboardStates("projects").scale, duration: 1 });
+          gsap.to(kbd.position, { ...keyboardStates("projects").position, duration: 1 });
+          gsap.to(kbd.rotation, { ...keyboardStates("projects").rotation, duration: 1 });
         },
       },
     });
@@ -514,8 +552,9 @@ const AnimatedBackground = () => {
     const framesParent = splineApp?.findObjectByName("bongo-cat");
     const frame1 = splineApp?.findObjectByName("frame-1");
     const frame2 = splineApp?.findObjectByName("frame-2");
+     console.log("bongo frames", { framesParent, frame1, frame2 });
     if (!frame1 || !frame2 || !framesParent)
-      return { start: () => {}, stop: () => {} };
+      return { start: () => {console.warn("bongo missing")}, stop: () => {} };
 
     let interval: NodeJS.Timeout;
     const start = () => {
@@ -598,7 +637,7 @@ const AnimatedBackground = () => {
             setSplineApp(app);
             bypassLoading();
           }}
-          scene="/assets/keyboard.spline"
+          scene="/assets/skills_keyboard.spline"
         />
       </Suspense>
     </>
